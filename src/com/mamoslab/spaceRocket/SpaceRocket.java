@@ -10,13 +10,15 @@ import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.mamoslab.spaceRocket.entities.Asteroid;
 import com.mamoslab.spaceRocket.entities.Rocket;
-import java.util.Random;
+import com.mamoslab.spaceRocket.entities.Star;
+import com.mamoslab.spaceRocket.utils.RandomGenerator;
 
 public class SpaceRocket extends SimpleApplication {
 
 	private Rocket rocket;
 	private Node asteroidNode = new Node("Asteroid Node");
 	private Node bulletNode = new Node("Bullet Node");
+	private Node starNode = new Node("Star Node");
 	private BitmapText hud;
 	private long lastTick;
 	private long tickLength = 1000l / 60;
@@ -48,6 +50,7 @@ public class SpaceRocket extends SimpleApplication {
 
 		guiNode.attachChild(asteroidNode);
 		guiNode.attachChild(bulletNode);
+		guiNode.attachChild(starNode);
 
 		inputManager.addMapping("up", new KeyTrigger(KeyInput.KEY_W), new KeyTrigger(KeyInput.KEY_UP));
 		inputManager.addMapping("right", new KeyTrigger(KeyInput.KEY_D), new KeyTrigger(KeyInput.KEY_RIGHT));
@@ -61,6 +64,10 @@ public class SpaceRocket extends SimpleApplication {
 		hud = new BitmapText(guiFont);
 		hud.setLocalTranslation(0f, settings.getHeight(), 0f);
 		guiNode.attachChild(hud);
+		
+		for (int i = 0; i < 1000; i++) {
+			starNode.attachChild(new Star(assetManager, settings));
+		}
 	}
 
 	@Override
@@ -69,7 +76,7 @@ public class SpaceRocket extends SimpleApplication {
 		
 		if (System.currentTimeMillis() - lastTick > tickLength) {
 			lastTick = System.currentTimeMillis();
-			if (new Random(System.currentTimeMillis()).nextInt((int) chance) == 0) {
+			if (RandomGenerator.newRandom().nextInt((int) chance) == 0) {
 				addAsteroid();
 				chance -= chanceRemove;
 			}
