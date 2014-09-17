@@ -25,7 +25,8 @@ public class Rocket extends Entity implements ActionListener {
 	public Rocket(final AssetManager assetManager, final AppSettings settings, Node bulletNode) {
 		super(assetManager, "Textures/Rocket.png", "Rocket");
 		fire = new Sprite(assetManager, "Textures/Rocket Fire.png", "Rocket Fire");
-		fire.move(-getTexture().getImage().getWidth() / 2f - fire.getTexture().getImage().getWidth() / 2f, 0f, 0f);
+		fire.setLocalTranslation(getLocalTranslation());
+		fire.move(-(getTexture().getImage().getWidth() - fire.getTexture().getImage().getWidth()) / 2f, 0f, 0f);
 		attachChild(fire);
 		scale(2f);
 		fire.removeFromParent();
