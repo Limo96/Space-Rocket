@@ -12,8 +12,8 @@ public class Object extends Entity {
 
 	private float speed, rotationSpeed;
 
-	public Object(AssetManager assetManager, AppSettings settings, String location, String name) {
-		super(assetManager, location, name);
+	public Object(AssetManager assetManager, AppSettings settings, String location, String extension, String name) {
+		super(assetManager, location, extension, name);
 
 		Random random = new Random(System.currentTimeMillis() * 1000000 + System.nanoTime());
 		setLocalTranslation(settings.getWidth() + getD(), random.nextInt(settings.getHeight()), 0f);

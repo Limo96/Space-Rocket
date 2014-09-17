@@ -12,8 +12,8 @@ public class Projectile extends Entity {
 
 	private float speed = 1000f;
 
-	public Projectile(AssetManager assetManager, final AppSettings settings, String location, String name, Quaternion direction) {
-		super(assetManager, location, name);
+	public Projectile(AssetManager assetManager, final AppSettings settings, String location, String extension, String name, Quaternion direction) {
+		super(assetManager, location, extension, name);
 		
 		setLocalRotation(direction);
 		

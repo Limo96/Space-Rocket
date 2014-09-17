@@ -23,12 +23,12 @@ public class Rocket extends Entity implements ActionListener {
 	private Sprite fire;
 
 	public Rocket(final AssetManager assetManager, final AppSettings settings, Node bulletNode) {
-		super(assetManager, "Textures/Rocket.png", "Rocket");
-		fire = new Sprite(assetManager, "Textures/Rocket Fire.png", "Rocket Fire");
+		super(assetManager, "Textures/Shuffle Rocket", "png", "Shuffle Rocket");
+		fire = new Sprite(assetManager, "Textures/Shuffle Rocket Fire", "png", "Shuffle Rocket Fire");
 		fire.setLocalTranslation(getLocalTranslation());
-		fire.move(-(getTexture().getImage().getWidth() - fire.getTexture().getImage().getWidth()) / 2f, 0f, 0f);
+		fire.move(-getTextures().get(0).getImage().getWidth() / 2f - fire.getTextures().get(0).getImage().getWidth() / 2f, 0f, 0f);
 		attachChild(fire);
-		scale(2f);
+		scale(2.5f);
 		fire.removeFromParent();
 
 		this.bulletNode = bulletNode;

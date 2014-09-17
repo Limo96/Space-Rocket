@@ -4,7 +4,7 @@ import com.jme3.asset.AssetManager;
 
 public class Entity extends Sprite {
 
-	public Entity(AssetManager assetManager, String location, String name) {
-		super(assetManager, location, name);
+	public Entity(AssetManager assetManager, String location, String extension, String name) {
+		super(assetManager, location, extension, name);
 	}
 }
