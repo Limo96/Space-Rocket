@@ -33,7 +33,7 @@ public class SpaceRocket extends SimpleApplication implements ActionListener {
 	private int score;
 	private float minChance = 12f;
 	private float itemSpawnChance = 10f;
-	private float gasolineGain = 0.02f;
+	private float gasolineGain = 0.05f;
 	private int bulletAmmoGain = 50;
 	
 	public static void main(String[] args) {
@@ -169,6 +169,8 @@ public class SpaceRocket extends SimpleApplication implements ActionListener {
 		rocket.setLocalTranslation(settings.getWidth() / 2f, settings.getHeight() / 2f, 0f);
 		rocket.setLocalRotation(new Quaternion(new float[]{0f, 0f, 0f}));
 		rocket.setMomentumSpeed(0f);
+		rocket.setBulletAmmo(500);
+		rocket.setGasoline(0.25f);
 		asteroidNode.detachAllChildren();
 		bulletNode.detachAllChildren();
 		gasolineNode.detachAllChildren();
