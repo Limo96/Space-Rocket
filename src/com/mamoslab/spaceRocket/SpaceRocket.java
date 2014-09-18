@@ -9,6 +9,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.mamoslab.spaceRocket.entities.Asteroid;
+import com.mamoslab.spaceRocket.entities.BulletAmmo;
+import com.mamoslab.spaceRocket.entities.Gasoline;
 import com.mamoslab.spaceRocket.entities.Rocket;
 import com.mamoslab.spaceRocket.entities.Star;
 import com.mamoslab.spaceRocket.utils.RandomGenerator;
@@ -19,13 +21,18 @@ public class SpaceRocket extends SimpleApplication {
 	private Node asteroidNode = new Node("Asteroid Node");
 	private Node bulletNode = new Node("Bullet Node");
 	private Node starNode = new Node("Star Node");
+	private Node gasolineNode = new Node("Gasoline Node");
+	private Node bulletAmmoNode = new Node("Bullet Ammo Node");
 	private BitmapText hud;
 	private long lastTick;
 	private long tickLength = 1000l / 60;
 	private float chance = 60f;
-	private float chanceRemove = 0.1f;
+	private float chanceRemove = 0.01f;
 	private int score;
-	private float minChance = 6f;
+	private float minChance = 12f;
+	private float itemSpawnChance = 10f;
+	private float gasolineGain = 0.02f;
+	private int bulletAmmoGain = 50;
 
 	public static void main(String[] args) {
 		SpaceRocket app = new SpaceRocket();
@@ -52,6 +59,8 @@ public class SpaceRocket extends SimpleApplication {
 		guiNode.attachChild(asteroidNode);
 		guiNode.attachChild(bulletNode);
 		guiNode.attachChild(starNode);
+		guiNode.attachChild(gasolineNode);
+		guiNode.attachChild(bulletAmmoNode);
 
 		inputManager.addMapping("up", new KeyTrigger(KeyInput.KEY_W), new KeyTrigger(KeyInput.KEY_UP));
 		inputManager.addMapping("right", new KeyTrigger(KeyInput.KEY_D), new KeyTrigger(KeyInput.KEY_RIGHT));
@@ -73,7 +82,7 @@ public class SpaceRocket extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
-		hud.setText("Score: " + score + "\nAmmo: " + rocket.getBulletAmmo() + "\nGasoline: " + (int) (rocket.getGasoline() * 100) + "%");
+		hud.setText("Score: " + score + "\nAmmo: " + rocket.getBulletAmmo() + "\nFuel: " + (int) (rocket.getGasoline() * 100) + "%");
 
 		if (System.currentTimeMillis() - lastTick > tickLength) {
 			lastTick = System.currentTimeMillis();
@@ -89,6 +98,24 @@ public class SpaceRocket extends SimpleApplication {
 		for (Spatial asteroid : asteroidNode.getChildren()) {
 			for (Spatial bullet : bulletNode.getChildren()) {
 				if (bullet.getWorldBound().intersects(asteroid.getWorldBound())) {
+					if (RandomGenerator.newRandom().nextInt((int) itemSpawnChance) == 0) {
+						if (RandomGenerator.newRandom().nextBoolean()) {
+							Asteroid asteroid_ = (Asteroid) asteroid;
+							Gasoline gasoline = new Gasoline(assetManager, settings);
+							gasoline.setLocalTranslation(asteroid_.getLocalTranslation());
+							gasoline.setSpeed(asteroid_.getSpeed());
+							gasoline.setRotationSpeed(asteroid_.getRotationSpeed());
+							gasolineNode.attachChild(gasoline);
+						} else {
+							Asteroid asteroid_ = (Asteroid) asteroid;
+							BulletAmmo ammo = new BulletAmmo(assetManager, settings);
+							ammo.setLocalTranslation(asteroid.getLocalTranslation());
+							ammo.setSpeed(asteroid_.getSpeed());
+							ammo.setRotationSpeed(asteroid_.getRotationSpeed());
+							bulletAmmoNode.attachChild(ammo);
+						}
+					}
+
 					asteroid.removeFromParent();
 					bullet.removeFromParent();
 					score++;
@@ -97,6 +124,20 @@ public class SpaceRocket extends SimpleApplication {
 
 			if (rocket.getWorldBound().intersects(asteroid.getWorldBound())) {
 				gameOver();
+			}
+		}
+
+		for (Spatial gasoline : gasolineNode.getChildren()) {
+			if (gasoline.getWorldBound().intersects(rocket.getWorldBound())) {
+				gasoline.removeFromParent();
+				rocket.setGasoline(rocket.getGasoline() + gasolineGain);
+			}
+		}
+		
+		for (Spatial ammo : bulletAmmoNode.getChildren()) {
+			if (ammo.getWorldBound().intersects(rocket.getWorldBound())) {
+				ammo.removeFromParent();
+				rocket.setBulletAmmo(rocket.getBulletAmmo() + bulletAmmoGain);
 			}
 		}
 	}

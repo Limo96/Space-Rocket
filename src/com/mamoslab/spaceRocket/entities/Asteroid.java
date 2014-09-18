@@ -8,6 +8,6 @@ public class Asteroid extends Object {
 
 	public Asteroid(AssetManager assetManager, AppSettings settings) {
 		super(assetManager, settings, "Textures/Asteroid", "png", "Asteroid");
-		scale(0.5f + RandomGenerator.newRandom().nextFloat() * 2.5f);
+		scale(1f + RandomGenerator.newRandom().nextFloat() * 3f);
 	}
 }
