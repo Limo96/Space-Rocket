@@ -47,28 +47,30 @@ public class Sprite extends Node {
 				i++;
 			} while (textureExists(this.location + "." + i + "." + this.extension));
 		}
-		
+
 		updateTexture();
 		picture.move(-textures.get(0).getImage().getWidth() / 2f, -textures.get(0).getImage().getHeight() / 2f, 0f);
 		attachChild(picture);
-		
-		addControl(new AbstractControl() {
-			@Override
-			protected void controlUpdate(float tpf) {
-				if (System.currentTimeMillis() - lastAnimationUpdate > animationSpeed) {
-					i++;
-					if (i >= textures.size()) {
-						i = 0;
-					}
-					
-					updateTexture();
-				}
-			}
 
-			@Override
-			protected void controlRender(RenderManager rm, ViewPort vp) {
-			}
-		});
+		if (textures.size() > 0) {
+			addControl(new AbstractControl() {
+				@Override
+				protected void controlUpdate(float tpf) {
+					if (System.currentTimeMillis() - lastAnimationUpdate > animationSpeed) {
+						i++;
+						if (i >= textures.size()) {
+							i = 0;
+						}
+
+						updateTexture();
+					}
+				}
+
+				@Override
+				protected void controlRender(RenderManager rm, ViewPort vp) {
+				}
+			});
+		}
 	}
 
 	private boolean textureExists(String texture) {
@@ -84,7 +86,7 @@ public class Sprite extends Node {
 		picture.setTexture(assetManager, (Texture2D) textures.get(i), true);
 		picture.setWidth(textures.get(i).getImage().getWidth());
 		picture.setHeight(textures.get(i).getImage().getHeight());
-		
+
 		lastAnimationUpdate = System.currentTimeMillis();
 	}
 
