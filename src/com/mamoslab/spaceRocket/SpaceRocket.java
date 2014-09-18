@@ -25,6 +25,7 @@ public class SpaceRocket extends SimpleApplication {
 	private float chance = 60f;
 	private float chanceRemove = 0.1f;
 	private int score;
+	private float minChance = 6f;
 
 	public static void main(String[] args) {
 		SpaceRocket app = new SpaceRocket();
@@ -60,11 +61,11 @@ public class SpaceRocket extends SimpleApplication {
 		inputManager.addListener(rocket, "up", "right", "down", "left", "shoot");
 
 		addAsteroid();
-		
+
 		hud = new BitmapText(guiFont);
 		hud.setLocalTranslation(0f, settings.getHeight(), 0f);
 		guiNode.attachChild(hud);
-		
+
 		for (int i = 0; i < 1000; i++) {
 			starNode.attachChild(new Star(assetManager, settings));
 		}
@@ -72,16 +73,19 @@ public class SpaceRocket extends SimpleApplication {
 
 	@Override
 	public void simpleUpdate(float tpf) {
-        hud.setText("Score: " + score + "\nAmmo: " + rocket.getBulletAmmo() + "\nGasoline: " + (int) (rocket.getGasoline() * 100) + "%");
-		
+		hud.setText("Score: " + score + "\nAmmo: " + rocket.getBulletAmmo() + "\nGasoline: " + (int) (rocket.getGasoline() * 100) + "%");
+
 		if (System.currentTimeMillis() - lastTick > tickLength) {
 			lastTick = System.currentTimeMillis();
 			if (RandomGenerator.newRandom().nextInt((int) chance) == 0) {
 				addAsteroid();
 				chance -= chanceRemove;
+				if (chance < minChance) {
+					chance = minChance;
+				}
 			}
 		}
-		
+
 		for (Spatial asteroid : asteroidNode.getChildren()) {
 			for (Spatial bullet : bulletNode.getChildren()) {
 				if (bullet.getWorldBound().intersects(asteroid.getWorldBound())) {
@@ -89,10 +93,10 @@ public class SpaceRocket extends SimpleApplication {
 					bullet.removeFromParent();
 					score++;
 				}
-				
-				if (rocket.getWorldBound().intersects(asteroid.getWorldBound())) {
-					
-				}
+			}
+
+			if (rocket.getWorldBound().intersects(asteroid.getWorldBound())) {
+				showLoseScreen();
 			}
 		}
 	}
@@ -101,7 +105,10 @@ public class SpaceRocket extends SimpleApplication {
 	public void simpleRender(RenderManager rm) {
 	}
 
-	public void addAsteroid() {
+	private void addAsteroid() {
 		asteroidNode.attachChild(new Asteroid(assetManager, settings));
+	}
+
+	private void showLoseScreen() {
 	}
 }

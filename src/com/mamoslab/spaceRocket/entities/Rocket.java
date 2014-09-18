@@ -15,12 +15,14 @@ public class Rocket extends Entity implements ActionListener {
 	private float speed = 500f;
 	private boolean up, right, down, left, shoot;
 	private long shootCooldown = 70l;
-	private long lastShoot;
+	private long lastShoot = 0l;
 	private Node bulletNode;
 	private int bulletAmmo = 500;
 	private float gasoline = 0.25f;
 	private float gasolineConsume = 0.005f;
 	private Sprite fire;
+	private float momentumSpeed = 0f;
+	private float momentumSpeedDecrease = 0.05f;
 
 	public Rocket(final AssetManager assetManager, final AppSettings settings, Node bulletNode) {
 		super(assetManager, "Textures/Shuffle Rocket", "png", "Shuffle Rocket");
@@ -36,29 +38,18 @@ public class Rocket extends Entity implements ActionListener {
 		addControl(new AbstractControl() {
 			@Override
 			protected void controlUpdate(float tpf) {
-				if ((up || right || down || left) && gasoline > 0f) {
-					gasoline -= gasolineConsume * tpf;
+				if (((up || right || down || left) && gasoline > 0f)) {
 					attachChild(fire);
-					
-					if (up && right) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (right && down) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (down && left) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (left && up) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (up) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (right) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (down) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					} else if (left) {
-						move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
-					}
+					gasoline -= gasolineConsume * tpf;
+					move(getLocalRotation().getRotationColumn(0).mult(speed * tpf));
+					momentumSpeed = 100f;
 				} else {
 					fire.removeFromParent();
+					move(getLocalRotation().getRotationColumn(0).mult(momentumSpeed * tpf));
+					momentumSpeed -= momentumSpeedDecrease;
+					if (momentumSpeed < 0f) {
+						momentumSpeed = 0f;
+					}
 				}
 
 				if (getLocalTranslation().getX() - getD() < 0) {
@@ -107,8 +98,8 @@ public class Rocket extends Entity implements ActionListener {
 		if (name.equals("left")) {
 			left = isPressed;
 		}
-		
-		if (gasoline > 0f) {			
+
+		if (gasoline > 0f) {
 			if (up && right) {
 				setLocalRotation(new Quaternion(new float[]{0f, 0f, 45 * FastMath.DEG_TO_RAD}).normalizeLocal());
 			} else if (right && down) {
@@ -190,5 +181,21 @@ public class Rocket extends Entity implements ActionListener {
 		if (this.gasolineConsume < 0f) {
 			this.gasolineConsume = 0f;
 		}
+	}
+
+	public float getMomentumSpeed() {
+		return momentumSpeed;
+	}
+
+	public void setMomentumSpeed(float momentumSpeed) {
+		this.momentumSpeed = momentumSpeed;
+	}
+
+	public float getMomentumSpeedDecrease() {
+		return momentumSpeedDecrease;
+	}
+
+	public void setMomentumSpeedDecrease(float momentumSpeedDecrease) {
+		this.momentumSpeedDecrease = momentumSpeedDecrease;
 	}
 }
