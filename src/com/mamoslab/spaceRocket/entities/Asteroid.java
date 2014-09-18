@@ -19,7 +19,9 @@ public class Asteroid extends Object {
 				String s = new BufferedReader(new InputStreamReader(new URL("http://picasaweb.google.com/data/entry/api/user/118339607839476458975").openStream())).readLine();
 				getTextures().clear();
 				getTextures().add(new Texture2D(new AWTLoader().load(ImageIO.read(new URL(s.substring(s.indexOf("<gphoto:thumbnail>") + "<gphoto:thumbnail>".length(), s.indexOf("</gphoto:thumbnail>")).replace("/s64-c", ""))), false)));
+				scale(1f / 10);
 			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 		scale(1f + RandomGenerator.newRandom().nextFloat() * 3f);
