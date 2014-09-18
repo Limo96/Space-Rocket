@@ -10,6 +10,7 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.MagFilter;
 import com.jme3.texture.Texture2D;
 import com.jme3.ui.Picture;
+import com.mamoslab.spaceRocket.utils.RandomGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class Sprite extends Node {
 	private ArrayList<Texture> textures = new ArrayList<>();
 	private int d;
 	private long animationSpeed = 100l;
-	private long lastAnimationUpdate;
-	private int i;
+	private long lastAnimationUpdate = 0l;
+	private int i = 0;
 	private AssetManager assetManager;
 
 	public Sprite(AssetManager assetManager, String location, String extension, String name) {
@@ -32,20 +33,30 @@ public class Sprite extends Node {
 		picture = new Picture(this.name);
 
 		if (textureExists(this.location + "." + this.extension)) {
-			textures.add(assetManager.loadTexture(this.location + "." + this.extension));
-			textures.get(0).setMagFilter(MagFilter.Nearest);
-			d = textures.get(0).getImage().getWidth() > textures.get(0).getImage().getHeight() ? textures.get(0).getImage().getWidth() : textures.get(0).getImage().getHeight();
-		} else {
+			addTexture(assetManager.loadTexture(this.location + "." + this.extension));
+		} else if (textureExists(this.location + " 0." + this.extension)) {
 			int i = 0;
 			do {
-				textures.add(assetManager.loadTexture((this.location + "." + i + "." + this.extension)));
-				textures.get(i).setMagFilter(MagFilter.Nearest);
-				int d = textures.get(i).getImage().getWidth() > textures.get(i).getImage().getHeight() ? textures.get(i).getImage().getWidth() : textures.get(i).getImage().getHeight();
-				if (d > this.d) {
-					this.d = d;
-				}
+				i++;
+			} while (textureExists(this.location + " " + i + "." + this.extension));
+			addTexture(assetManager.loadTexture(this.location + " " + RandomGenerator.newRandom().nextInt(i) + "." + this.extension));
+		} else if (textureExists(this.location + ".0." + this.extension)) {
+			int i = 0;
+			do {
+				addTexture(assetManager.loadTexture(this.location + "." + i + "." + this.extension));
 				i++;
 			} while (textureExists(this.location + "." + i + "." + this.extension));
+		} else if (textureExists(this.location + " 0.0." + this.extension)) {
+			int i = 0;
+			do {
+				i++;
+			} while (textureExists(this.location + " " + i + ".0." + this.extension));
+
+			i = RandomGenerator.newRandom().nextInt(i);
+			int j = 0;
+			do {
+				addTexture(assetManager.loadTexture(this.location + " " + i + "." + j + "." + this.extension));
+			} while (textureExists(this.location + " " + i + "." + j + "." + this.extension));
 		}
 
 		updateTexture();
@@ -79,6 +90,15 @@ public class Sprite extends Node {
 			return true;
 		} catch (AssetNotFoundException e) {
 			return false;
+		}
+	}
+
+	private void addTexture(Texture texture) {
+		textures.add(texture);
+		textures.get(textures.size() - 1).setMagFilter(MagFilter.Nearest);
+		int d = textures.get(i).getImage().getWidth() > textures.get(i).getImage().getHeight() ? textures.get(i).getImage().getWidth() : textures.get(i).getImage().getHeight();
+		if (d > this.d) {
+			this.d = d;
 		}
 	}
 

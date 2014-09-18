@@ -8,7 +8,7 @@ import com.mamoslab.spaceRocket.utils.RandomGenerator;
 
 public class Star extends BackgroundObject {
 	public Star(AssetManager assetManager, AppSettings settings) {
-		super(assetManager, "Textures/Star " + RandomGenerator.newRandom().nextInt(4), "png", "Star");
+		super(assetManager, "Textures/Star", "png", "Star");
 		
 		scale(0.1f + RandomGenerator.newRandom().nextFloat() * 1.4f);
 		setLocalRotation(new Quaternion(new float[]{0f, 0f, RandomGenerator.newRandom().nextFloat() * 360 * FastMath.DEG_TO_RAD}).normalizeLocal());

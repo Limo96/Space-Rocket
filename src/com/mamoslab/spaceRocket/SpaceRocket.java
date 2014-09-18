@@ -96,7 +96,7 @@ public class SpaceRocket extends SimpleApplication {
 			}
 
 			if (rocket.getWorldBound().intersects(asteroid.getWorldBound())) {
-				showLoseScreen();
+				gameOver();
 			}
 		}
 	}
@@ -109,6 +109,6 @@ public class SpaceRocket extends SimpleApplication {
 		asteroidNode.attachChild(new Asteroid(assetManager, settings));
 	}
 
-	private void showLoseScreen() {
+	private void gameOver() {
 	}
 }
