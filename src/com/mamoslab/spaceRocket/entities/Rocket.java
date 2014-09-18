@@ -22,7 +22,7 @@ public class Rocket extends Entity implements ActionListener {
 	private float gasolineConsume = 0.005f;
 	private Sprite fire;
 	private float momentumSpeed = 0f;
-	private float momentumSpeedDecrease = 0.05f;
+	private float momentumSpeedDecrease = 0.08f;
 
 	public Rocket(final AssetManager assetManager, final AppSettings settings, Node bulletNode) {
 		super(assetManager, "Textures/Shuffle Rocket", "png", "Shuffle Rocket");
